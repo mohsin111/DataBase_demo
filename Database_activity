@@ -1,0 +1,121 @@
+package com.agileinfoways.databasedemo;
+
+import java.util.List;
+
+import android.app.Activity;
+import android.os.Bundle;
+import android.view.View;
+import android.view.View.OnClickListener;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.TextView;
+
+import com.agileinfoways.databasedemo.databasehandler.DatabaseHandler;
+import com.agileinfoways.databasedemo.model.Form_Model;
+import com.example.com.agileinfoways.databasedemo.R;
+
+public class DatebaseDemo_Activity extends Activity {
+
+	DatabaseHandler dbhandler;
+	EditText name, mobile;
+	TextView detail_textview;
+	Button show, submit, delete;
+
+	@Override
+	protected void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+
+		setContentView(R.layout.activity_datebase_demo_);
+		dbhandler = new DatabaseHandler(DatebaseDemo_Activity.this);
+
+		// EditText
+		name = (EditText) findViewById(R.id.editText1);
+		mobile = (EditText) findViewById(R.id.editText2);
+
+		// Button
+		submit = (Button) findViewById(R.id.button1);
+		show = (Button) findViewById(R.id.button2);
+		delete = (Button) findViewById(R.id.button3);
+
+		// TextView
+		detail_textview = (TextView) findViewById(R.id.textView4);
+
+	}
+
+	@Override
+	protected void onResume() {
+		// TODO Auto-generated method stub
+		super.onResume();
+
+		submit.setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View arg0) {
+				// TODO Auto-generated method stub
+
+				// Creting Form_Model object for instering data into database.
+				Form_Model form_object = new Form_Model();
+				form_object.setName(name.getText().toString());
+				form_object.setMobile(mobile.getText().toString());
+				dbhandler.addForm(form_object);
+				show();
+
+			}
+		});
+
+		show.setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View arg0) {
+				// TODO Auto-generated method stub
+
+				show();
+
+			}
+		});
+
+		delete.setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View arg0) {
+				// TODO Auto-generated method stub
+
+				dbhandler.deleteRoute();
+				show();
+
+			}
+		});
+
+	}
+
+	void show() {
+
+		String detail = "";
+
+		// Creting Form_Model object for instering data into database.
+
+		List<Form_Model> list = dbhandler.getAll_form_Object();
+		for (int i = 0; i < list.size(); i++) {
+			Form_Model form_object = new Form_Model();
+			form_object = list.get(i);
+			detail += "\n Name : " + form_object.name + " Mobile : "
+					+ form_object.mobileno + " \n";
+		}
+
+		detail_textview.setText(detail);
+
+	}
+
+	@Override
+	protected void onPause() {
+		// TODO Auto-generated method stub
+		super.onPause();
+	}
+
+	@Override
+	protected void onDestroy() {
+		// TODO Auto-generated method stub
+		super.onDestroy();
+	}
+
+}
